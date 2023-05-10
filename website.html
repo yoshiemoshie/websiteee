@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Yoshie</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: 'Noto Sans', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    a {
+      color: white;
+      display: none;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=YourCoolFont" rel="stylesheet">
+</head>
+<body>
+  <h1>Yoshie</h1>
+  <p id="typing-text"></p>
+  <a href="https://discord.gg/yoshie" target="_blank" id="discord-link" style="display: block;">Discord Server</a>
+  <br>
+  <a href="https://www.roblox.com/users/982423730/profile" target="_blank" id="roblox-link" style="display: block;">Roblox Profile</a>
+  
+  <script>
+    const canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    const context = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    const particles = [];
+    
+    document.addEventListener('mousemove', createParticle);
+    document.addEventListener('touchmove', createParticle);
+    
+    function createParticle(event) {
+      const particle = {
+        x: event.clientX || event.touches[0].clientX,
+        y: event.clientY || event.touches[0].clientY,
+        radius: Math.random() * 5 + 1,
+        color: `white`,
+        speedX: Math.random() * 3 - 1.5,
+        speedY: Math.random() * 3 - 1.5,
+        opacity: 1
+      };
+      
+      particles.push(particle);
+    }
+    
+    function animateParticles() {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((particle, index) => {
+        particle.x += particle.speedX;
+        particle.y += particle.speedY;
+        particle.opacity -= 0.01;
+        if (particle.opacity <= 0) {
+          particles.splice(index, 1);
+          return;
+        }
+        context.globalAlpha = particle.opacity;
+        context.fillStyle = particle.color;
+        context.beginPath();
+        context.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2, false);
+        context.fill();
+      });
+      
+      requestAnimationFrame(animateParticles);
+    }
+    
+    animateParticles();
+    
+    const typingText = document.getElementById('typing-text');
+    const discordLink = document.getElementById('discord-link');
+    const robloxLink = document.getElementById('roblox-link');
+    const messages = [
+      ' Welcome to my website!',
+      ' Enjoy!',
+      ' Built by yoshie#3217',
+      ' I\'m extremely racist',
+      ' Credits to real#0009',
+      ' This was made by a 14-year-old, don\'t expect too much',
+      ' I\'m still not giving you my specs',
+      ' Sponsored by Raid Shadow Legends 😱',
+      ' I\'m extremely gay'
+    ];
+    
+    let messageIndex = 0;
+    let letterIndex = 0;
+    let deleting = false;
+    
+    function typeEffect() {
+  const currentMessage = messages[messageIndex];
+  
+  if (deleting) {
+    typingText.textContent = currentMessage.slice(0, letterIndex);
+    letterIndex--;
+
+    if (letterIndex === 0) {
+      deleting = false;
+      messageIndex++;
+
+      if (messageIndex === messages.length) {
+        messageIndex = 0;
+      }
+
+      setTimeout(typeEffect, 1500);
+    } else {
+      setTimeout(typeEffect, 50);
+    }
+  } else {
+    typingText.textContent += currentMessage[letterIndex];
+    letterIndex++;
+    if (letterIndex === currentMessage.length) {
+      deleting = true;
+      setTimeout(typeEffect, 1500);
+    } else {
+      setTimeout(typeEffect, 50);
+    }
+  }
+}
+
+setTimeout(typeEffect, 1000);
+</script>
+</body>
+</html>
